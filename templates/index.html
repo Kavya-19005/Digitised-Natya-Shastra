@@ -10,12 +10,12 @@
 
     <div id="app-container">
         <h1>Stick Figure Pose Animator 🤖</h1>
-        <p>Upload a video and choose your stick figure style.</p>
+        <p>Upload a video and customize your stick figure style.</p>
 
         <form id="upload-form">
             <div class="form-group">
-                <label for="video">Upload Video (MP4 recommended)</label>
-                <input type="file" id="video" name="video" accept="video/*" required>
+                <label for="video">Upload Video (MP4 recommended, max 16MB)</label>
+                <input type="file" id="video" name="video" accept="video/mp4,video/quicktime,video/avi" required>
             </div>
             
             <div class="form-group">
@@ -24,7 +24,7 @@
             </div>
 
             <div class="form-group">
-                <label for="jointColor">Joint Color (Circles)</label>
+                <label for="jointColor">Joint Color (Joints)</label>
                 <input type="color" id="jointColor" name="jointColor" value="#ff0000">
             </div>
 
@@ -47,6 +47,13 @@
         </form>
 
         <div id="status"></div>
+
+        <div id="video-display-container">
+            <h3>Processed Animation:</h3>
+            <video id="resultVideo" width="100%" height="auto" controls style="max-width: 600px; display: none; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);"></video>
+            <a id="downloadLink" style="display: none; text-align: center; margin-top: 10px; font-weight: bold; color: #007bff; cursor: pointer;">Download Processed Video</a>
+        </div>
+        
     </div>
 
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
