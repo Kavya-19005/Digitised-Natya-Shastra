@@ -6,16 +6,17 @@ import tempfile
 import os
 
 app = Flask(__name__)
+# Set maximum content length to 16MB
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
 mp_pose = mp.solutions.pose
 POSE_CONNECTIONS = [
-    (11, 13), (13, 15),
-    (12, 14), (14, 16),
-    (11, 12), (23, 24),
-    (11, 23), (12, 24),
-    (23, 25), (25, 27),
-    (24, 26), (26, 28),
+    (11, 13), (13, 15), # Left arm
+    (12, 14), (14, 16), # Right arm
+    (11, 12), (23, 24), # Shoulders, Hips
+    (11, 23), (12, 24), # Torso sides
+    (23, 25), (25, 27), # Left leg
+    (24, 26), (26, 28), # Right leg
 ]
 
 def hex_to_bgr(hex_color):
@@ -145,4 +146,5 @@ if __name__ == "__main__":
     os.makedirs('templates', exist_ok=True)
     os.makedirs('static/css', exist_ok=True)
     os.makedirs('static/js', exist_ok=True)
+    print("Starting Flask app. Go to http://127.0.0.1:5000")
     app.run(debug=True)
