@@ -6,8 +6,8 @@ import tempfile
 import os
 
 app = Flask(__name__)
-# Set maximum content length to 16MB
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
+# Set maximum content length to 50MB
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024 
 
 mp_pose = mp.solutions.pose
 POSE_CONNECTIONS = [
