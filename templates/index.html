@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stick Figure Animator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div id="app-container">
+        <h1>Stick Figure Pose Animator 🤖</h1>
+        <p>Upload a video and choose your stick figure style.</p>
+
+        <form id="upload-form">
+            <div class="form-group">
+                <label for="video">Upload Video (MP4 recommended)</label>
+                <input type="file" id="video" name="video" accept="video/*" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="lineColor">Bone Color (Lines)</label>
+                <input type="color" id="lineColor" name="lineColor" value="#00ff00">
+            </div>
+
+            <div class="form-group">
+                <label for="jointColor">Joint Color (Circles)</label>
+                <input type="color" id="jointColor" name="jointColor" value="#ff0000">
+            </div>
+
+            <div class="form-group">
+                <label for="bgColor">Background Color</label>
+                <input type="color" id="bgColor" name="bgColor" value="#000000">
+            </div>
+
+            <div class="form-group">
+                <label for="thickness">Line Thickness</label>
+                <input type="number" id="thickness" name="thickness" value="3" min="1" max="10">
+            </div>
+            
+            <div class="form-group">
+                <label for="radius">Joint Radius</label>
+                <input type="number" id="radius" name="radius" value="5" min="1" max="10">
+            </div>
+
+            <button type="submit" id="submit-btn">Process Video</button>
+        </form>
+
+        <div id="status"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
