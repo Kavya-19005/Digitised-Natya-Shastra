@@ -1,9 +1,10 @@
 const { GestureRecognizer, FilesetResolver, DrawingUtils } = window.MediaPipeTasksGestureRecognizer;
 
-const modelPath = '/static/models/Bharatnatyam.task'; // Model path served by Flask
+// !!! CRITICAL: Ensure this path matches the location of your file: static/models/Bharatnatyam.task
+const modelPath = '/static/models/Bharatnatyam.task'; 
 let gestureRecognizer;
-let runningMode = "VIDEO"; // Use video mode for live webcam stream
-let lastVideoTime = -1; // Timestamp for frame-rate consistency
+let runningMode = "VIDEO"; 
+let lastVideoTime = -1; 
 
 const webcamElement = document.getElementById("webcam");
 const canvasElement = document.getElementById("output_canvas");
@@ -21,14 +22,19 @@ async function createGestureRecognizer() {
             "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
         );
         
+        // Use a standard fetch to check if the model file is accessible (optional health check)
+        const modelResponse = await fetch(modelPath);
+        if (!modelResponse.ok) {
+            throw new Error(`Failed to fetch model file (${modelPath}). Status: ${modelResponse.status}`);
+        }
+
         gestureRecognizer = await GestureRecognizer.create(filesetResolver, {
             baseOptions: {
                 modelAssetPath: modelPath,
                 runningMode: runningMode,
-                // Setting up delegation to GPU (WebGPU or WebGL) for faster performance
                 delegate: "GPU", 
             },
-            numHands: 2 // Allow recognition of up to two hands
+            numHands: 2 
         });
         
         statusDiv.textContent = "Model loaded successfully. Starting webcam...";
@@ -37,7 +43,7 @@ async function createGestureRecognizer() {
         enableCam();
 
     } catch (error) {
-        statusDiv.textContent = `ERROR: Could not load model. Check console and ensure ${modelPath} exists.`;
+        statusDiv.textContent = `ERROR: Could not load model. Check console for details.`;
         statusDiv.className = "error";
         console.error("Gesture Recognizer Initialization Error:", error);
     }
@@ -51,7 +57,6 @@ function enableCam() {
         return;
     }
 
-    // Get permission from user and start video stream
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function (stream) {
@@ -59,7 +64,7 @@ function enableCam() {
                 webcamElement.addEventListener("loadeddata", predictWebcam);
             })
             .catch(error => {
-                statusDiv.textContent = "ERROR: Webcam access denied or failed.";
+                statusDiv.textContent = "ERROR: Webcam access denied or failed. Check browser permissions.";
                 statusDiv.className = "error";
                 console.error("Webcam access error:", error);
             });
@@ -72,16 +77,21 @@ function enableCam() {
 
 // 3. Real-time Prediction Loop
 function predictWebcam() {
+    // This is run after the video stream starts
+    if (webcamElement.videoWidth === 0) {
+        window.requestAnimationFrame(predictWebcam);
+        return;
+    }
+
     // Set the canvas dimensions to match the video
-    canvasElement.style.height = webcamElement.videoHeight;
-    canvasElement.style.width = webcamElement.videoWidth;
+    canvasElement.style.height = `${webcamElement.videoHeight}px`;
+    canvasElement.style.width = `${webcamElement.videoWidth}px`;
     canvasElement.width = webcamElement.videoWidth;
     canvasElement.height = webcamElement.videoHeight;
-
+    
     let results = null;
-
-    // Use a timestamp check to maintain a consistent frame rate
     let nowInMs = performance.now();
+    
     if (lastVideoTime !== webcamElement.currentTime) {
         lastVideoTime = webcamElement.currentTime;
         results = gestureRecognizer.recognizeForVideo(webcamElement, nowInMs);
@@ -104,7 +114,6 @@ function predictWebcam() {
 
         if (results.gestures.length > 0) {
             for (const gesture of results.gestures) {
-                 // Format the result: e.g., "Pathakam (Left Hand)" or "Mushti (Right Hand)"
                 const handLabel = gesture.handLabels[0].categoryName;
                 const gestureName = mapGestureName(gesture.categoryName);
                 
@@ -113,7 +122,6 @@ function predictWebcam() {
             }
         }
         
-        // Update the display elements
         resultElement.textContent = mudraText.length > 0 ? mudraText.join(' | ') : '(Waiting for mudra)';
         scoreElement.textContent = mudraText.length > 0 ? confidenceScore : '--';
 
@@ -131,16 +139,15 @@ function predictWebcam() {
 
 // Map the model's output labels (e.g., 'rock', 'paper') to the mudra names
 function mapGestureName(modelName) {
-    // Assuming your model outputs the original labels (rock, paper, scissors)
     switch (modelName.toLowerCase()) {
         case 'rock':
-            return 'Mushti'; // Mudra similar to rock
+            return 'Mushti'; 
         case 'paper':
-            return 'Pathakam'; // Mudra similar to paper
+            return 'Pathakam';
         case 'scissors':
-            return 'Karthari'; // Mudra similar to scissors (Karthari Mukha)
+            return 'Karthari'; 
         default:
-            return modelName.charAt(0).toUpperCase() + modelName.slice(1); // Default to title case
+            return modelName.charAt(0).toUpperCase() + modelName.slice(1);
     }
 }
 
