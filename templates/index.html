@@ -4,17 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stick Figure Animator</title>
+    <!-- Links to the external CSS file in the static/css folder -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
     <div id="app-container">
-        <h1>Stick Figure Pose Animator </h1>
+        <!-- NAVIGATION LINK ADDED HERE -->
+        <p class="nav-link"><a href="{{ url_for('mudra_recognizer') }}">Go to Mudra Recognizer 👈</a></p>
+        
+        <h1>Stick Figure Pose Animator 🤖</h1>
         <p>Upload a video and customize your stick figure style.</p>
 
+        <!-- Form containing all style parameters -->
         <form id="upload-form">
             <div class="form-group">
-                <label for="video">Upload Video (MP4 recommended, max 16MB)</label>
+                <label for="video">Upload Video (MP4 recommended, max 50MB)</label>
                 <input type="file" id="video" name="video" accept="video/mp4,video/quicktime,video/avi" required>
             </div>
             
@@ -46,16 +51,20 @@
             <button type="submit" id="submit-btn">Process Video</button>
         </form>
 
+        <!-- Status and Video Display Area -->
         <div id="status"></div>
 
         <div id="video-display-container">
             <h3>Processed Animation:</h3>
+            <!-- Video player, initially hidden -->
             <video id="resultVideo" width="100%" height="auto" controls style="max-width: 600px; display: none; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);"></video>
+            <!-- Download link, initially hidden -->
             <a id="downloadLink" style="display: none; text-align: center; margin-top: 10px; font-weight: bold; color: #007bff; cursor: pointer;">Download Processed Video</a>
         </div>
         
     </div>
 
+    <!-- Links to the external JavaScript file in the static/js folder -->
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

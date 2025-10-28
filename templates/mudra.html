@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bharatnatyam Mudra Recognizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Import MediaPipe libraries needed for client-side ML -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-gesture-recognizer@0.10.11/gesture_recognizer_bundle.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <div id="app-container" style="max-width: 900px;">
+        <p class="nav-link"><a href="{{ url_for('index') }}">Go back to Stick Figure Animator 👈</a></p>
+
+        <h1>Real-Time Mudra Recognizer 🙏</h1>
+        <p>This tool uses your webcam to identify hand gestures (mudras) in real-time using your custom MediaPipe model.</p>
+        
+        <div id="live-view" style="position: relative; margin-top: 20px; text-align: center;">
+            
+            <!-- Video feed from webcam -->
+            <video id="webcam" autoplay playsinline style="width: 100%; max-width: 800px; transform: scaleX(-1); border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);"></video>
+            
+            <!-- Canvas overlay for drawing landmarks (optional but good practice) -->
+            <canvas id="output_canvas" style="position: absolute; top: 0; left: 0; transform: scaleX(-1); width: 100%; max-width: 800px;"></canvas>
+
+            <div id="status" class="processing">Loading model...</div>
+
+            <!-- Results display area -->
+            <div id="gesture-result" style="margin-top: 20px; padding: 15px; background: #e6f7ff; border: 1px solid #91d5ff; border-radius: 8px;">
+                <h2 style="margin: 0;">Recognized Mudra: <span id="mudra-name" style="color: #007bff; font-weight: bold;">(Waiting for hand)</span></h2>
+                <p>Confidence: <span id="mudra-score">--</span></p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Links to the new JavaScript logic -->
+    <script src="{{ url_for('static', filename='js/mudra_app.js') }}"></script>
+</body>
+</html>
